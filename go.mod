@@ -1,4 +1,4 @@
-module maccath/go-webapp
+module github.com/maccath/go-webapp
 
 go 1.18
 
