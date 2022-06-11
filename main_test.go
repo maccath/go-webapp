@@ -48,7 +48,7 @@ func TestSayHello(t *testing.T) {
 
 		// Hack to try to fake gorilla/mux vars
 		vars := map[string]string{
-			"name": "Katy",
+			"name": "katy",
 		}
 
 		req = mux.SetURLVars(req, vars)
@@ -58,7 +58,7 @@ func TestSayHello(t *testing.T) {
 		output, err := getOutput(w)
 
 		got := output
-		want := "Hello, Katy!"
+		want := "Hello, katy!"
 
 		if got != want {
 			t.Errorf("got %q, wanted %q", got, want)

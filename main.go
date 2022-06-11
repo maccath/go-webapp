@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/maccath/go-webapp/users"
 	"net/http"
 	"os"
 )
@@ -24,14 +25,19 @@ func main() {
 
 func SayHello(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
+	var user *users.User
 
-	fmt.Fprintf(w, Hello(vars["name"]))
-}
-
-func Hello(name string) string {
-	if name == "" {
-		name = "world"
+	if vars["name"] != "" {
+		user = &users.User{Name: vars["name"]}
 	}
 
-	return "Hello, " + name + "!"
+	fmt.Fprintf(w, Hello(user))
+}
+
+func Hello(user *users.User) string {
+	if user == nil {
+		return "Hello, world!"
+	} else {
+		return "Hello, " + user.Name + "!"
+	}
 }
