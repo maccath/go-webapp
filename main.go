@@ -3,10 +3,19 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
+	"github.com/maccath/go-webapp/repository"
 	"github.com/maccath/go-webapp/users"
 	"net/http"
 	"os"
 )
+
+var repo users.Repository
+
+func init() {
+	repo = &repository.UserMemoryRepo{}
+
+	repo.Save(users.User{Name: "katy"})
+}
 
 func main() {
 	r := mux.NewRouter()
@@ -28,7 +37,7 @@ func SayHello(w http.ResponseWriter, r *http.Request) {
 	var user *users.User
 
 	if vars["name"] != "" {
-		user = &users.User{Name: vars["name"]}
+		user = repo.FindByName(vars["name"])
 	}
 
 	fmt.Fprintf(w, Hello(user))
