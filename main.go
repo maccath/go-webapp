@@ -13,7 +13,7 @@ func main() {
 	r.HandleFunc("/user/{name}", HelloUser)
 	r.HandleFunc("/", HelloWorld)
 
-	http.ListenAndServe(os.Getenv("PORT"), r)
+	http.ListenAndServe(":"+os.Getenv("PORT"), r)
 }
 
 func HelloWorld(w http.ResponseWriter, r *http.Request) {
