@@ -8,53 +8,64 @@ import (
 	"testing"
 )
 
-func TestHelloWorld(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/", nil)
+func buildRequest(target string) (*http.Request, *httptest.ResponseRecorder) {
+	req := httptest.NewRequest(http.MethodGet, target, nil)
 	w := httptest.NewRecorder()
 
-	HelloWorld(w, req)
-	
-	res := w.Result()
-	defer res.Body.Close()
-	data, err := ioutil.ReadAll(res.Body)
-
-	got := string(data)
-	want := "Hello, world!"
-
-	if got != want {
-		t.Errorf("got %q, wanted %q", got, want)
-	}
-
-	if err != nil {
-		t.Errorf("expected error to be nil got %v", err)
-	}
+	return req, w
 }
 
-func TestHelloUser(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/user/Katy", nil)
-	w := httptest.NewRecorder()
-
-	// Hack to try to fake gorilla/mux vars
-	vars := map[string]string{
-		"name": "Katy",
-	}
-
-	req = mux.SetURLVars(req, vars)
-
-	HelloUser(w, req)
-
+func getOutput(w *httptest.ResponseRecorder) (string, error) {
 	res := w.Result()
 	defer res.Body.Close()
 	data, err := ioutil.ReadAll(res.Body)
 
-	got := string(data)
-	want := "Hello, Katy!"
+	return string(data), err
+}
 
-	if got != want {
-		t.Errorf("got %q, wanted %q", got, want)
-	}
+func TestSayHello(t *testing.T) {
+	t.Run("It says hello world when no user is specified", func(t *testing.T) {
+		req, w := buildRequest("/")
 
-	if err != nil {
-		t.Errorf("expected error to be nil got %v", err)
-	}
+		SayHello(w, req)
+
+		output, err := getOutput(w)
+
+		got := output
+		want := "Hello, world!"
+
+		if got != want {
+			t.Errorf("got %q, wanted %q", got, want)
+		}
+
+		if err != nil {
+			t.Errorf("expected error to be nil got %v", err)
+		}
+	})
+
+	t.Run("It says the users name when a name is specified", func(t *testing.T) {
+		req, w := buildRequest("/user/katy")
+
+		// Hack to try to fake gorilla/mux vars
+		vars := map[string]string{
+			"name": "Katy",
+		}
+
+		req = mux.SetURLVars(req, vars)
+
+		SayHello(w, req)
+
+		output, err := getOutput(w)
+
+		got := output
+		want := "Hello, Katy!"
+
+		if got != want {
+			t.Errorf("got %q, wanted %q", got, want)
+		}
+
+		if err != nil {
+			t.Errorf("expected error to be nil got %v", err)
+		}
+	})
 }

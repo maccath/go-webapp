@@ -10,8 +10,8 @@ import (
 func main() {
 	r := mux.NewRouter()
 
-	r.HandleFunc("/user/{name}", HelloUser)
-	r.HandleFunc("/", HelloWorld)
+	r.HandleFunc("/user/{name}", SayHello)
+	r.HandleFunc("/", SayHello)
 
 	port := os.Getenv("PORT")
 
@@ -22,12 +22,16 @@ func main() {
 	http.ListenAndServe(":"+port, r)
 }
 
-func HelloWorld(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hello, world!")
-}
-
-func HelloUser(w http.ResponseWriter, r *http.Request) {
+func SayHello(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 
-	fmt.Fprintf(w, "Hello, %s!", vars["name"])
+	fmt.Fprintf(w, Hello(vars["name"]))
+}
+
+func Hello(name string) string {
+	if name == "" {
+		name = "world"
+	}
+
+	return "Hello, " + name + "!"
 }
