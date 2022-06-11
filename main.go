@@ -9,11 +9,9 @@ import (
 	"os"
 )
 
-var repo users.Repository
+var repo users.Repository = &repository.UserMemoryRepo{}
 
 func init() {
-	repo = &repository.UserMemoryRepo{}
-
 	repo.Save(users.User{Name: "katy"})
 }
 
