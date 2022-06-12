@@ -19,10 +19,10 @@ jobs:
             chmod +x ./cc-test-reporter
             ./cc-test-reporter before-build
       - go/test:
-          coverprofile: coverage.out 
+          coverprofile: c.out 
       - run:
           name: Report code coverage
-          command: ./cc-test-reporter after-build --coverage-input-type gocov coverage.out --exit-code $?
+          command: ./cc-test-reporter after-build --coverage-input-type gocov --exit-code $?
 
 workflows:
   example-workflow:
