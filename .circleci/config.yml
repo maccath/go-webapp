@@ -11,6 +11,7 @@ jobs:
       - image: cimg/base:stable
     steps:
       - go/install
+      - checkout
       - go/test:
           coverprofile: cover-source.out 
 
