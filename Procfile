@@ -1,1 +1,1 @@
-web: bin/go-webapp
+web: bin/cmd
