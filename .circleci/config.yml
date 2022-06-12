@@ -22,7 +22,7 @@ jobs:
           coverprofile: coverage.out 
       - run:
           name: Report code coverage
-          command: ./cc-test-reporter after-build --input-type gocov coverage.out --exit-code $?
+          command: ./cc-test-reporter after-build --coverage-input-type gocov coverage.out --exit-code $?
 
 workflows:
   example-workflow:
