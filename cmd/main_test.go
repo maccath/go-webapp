@@ -43,7 +43,7 @@ func TestSayHello(t *testing.T) {
 		}
 	})
 
-	t.Run("It says the users name when a name is specified", func(t *testing.T) {
+	t.Run("It says the user name when a name is specified", func(t *testing.T) {
 		req, w := buildRequest("/user/katy")
 
 		// Hack to try to fake gorilla/mux vars

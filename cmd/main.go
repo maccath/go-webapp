@@ -3,16 +3,16 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/mux"
-	"github.com/maccath/go-webapp/repository"
-	"github.com/maccath/go-webapp/users"
+	"github.com/maccath/go-webapp/pkg/storage/memory"
+	"github.com/maccath/go-webapp/pkg/user"
 	"net/http"
 	"os"
 )
 
-var repo users.Repository = &repository.UserMemoryRepo{}
+var repo user.Repository = &memory.Repository{}
 
 func init() {
-	repo.Save(users.User{Name: "katy"})
+	repo.Save(user.Model{Name: "katy"})
 }
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 
 func SayHello(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	var user *users.User
+	var user *user.Model
 
 	if vars["name"] != "" {
 		user = repo.FindByName(vars["name"])
@@ -41,7 +41,7 @@ func SayHello(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, Hello(user))
 }
 
-func Hello(user *users.User) string {
+func Hello(user *user.Model) string {
 	if user == nil {
 		return "Hello, world!"
 	} else {
