@@ -1,15 +1,25 @@
 package memory
 
 import (
-	"github.com/maccath/go-webapp/pkg/user"
+	"github.com/maccath/go-webapp/pkg/greeting"
 )
 
-type Repository map[string]*user.Model
+type Repository map[string]User
 
-func (r Repository) FindByName(name string) *user.Model {
-	return r[name]
+func (r Repository) FindByName(name string) greeting.User {
+	var user greeting.User
+
+	if u, ok := r[name]; ok {
+		user.Name = u.Name
+	}
+
+	return user
 }
 
-func (r Repository) Save(user user.Model) {
-	r[user.Name] = &user
+func (r Repository) Save(user User) {
+	var u User
+
+	u.Name = user.Name
+
+	r[user.Name] = u
 }

@@ -1,25 +1,18 @@
 package main
 
 import (
-	"fmt"
-	"github.com/gorilla/mux"
+	"github.com/maccath/go-webapp/pkg/greeting"
+	"github.com/maccath/go-webapp/pkg/http/web"
 	"github.com/maccath/go-webapp/pkg/storage/memory"
-	"github.com/maccath/go-webapp/pkg/user"
 	"net/http"
 	"os"
 )
 
-var repo user.Repository = &memory.Repository{}
-
-func init() {
-	repo.Save(user.Model{Name: "katy"})
-}
-
 func main() {
-	r := mux.NewRouter()
+	var repo = memory.Repository{}
+	repo.Save(memory.User{Name: "katy"})
 
-	r.HandleFunc("/user/{name}", SayHello)
-	r.HandleFunc("/", SayHello)
+	var g = greeting.NewService(repo)
 
 	port := os.Getenv("PORT")
 
@@ -27,24 +20,5 @@ func main() {
 		port = "80"
 	}
 
-	http.ListenAndServe(":"+port, r)
-}
-
-func SayHello(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	var user *user.Model
-
-	if vars["name"] != "" {
-		user = repo.FindByName(vars["name"])
-	}
-
-	fmt.Fprintf(w, Hello(user))
-}
-
-func Hello(user *user.Model) string {
-	if user == nil {
-		return "Hello, world!"
-	} else {
-		return "Hello, " + user.Name + "!"
-	}
+	http.ListenAndServe(":"+port, web.Handler(g))
 }
