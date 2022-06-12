@@ -10,6 +10,7 @@ jobs:
     docker:
       - image: cimg/base:stable
     steps:
+      - go/install
       - go/test:
           coverprofile: cover-source.out 
 
