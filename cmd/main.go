@@ -1,10 +1,11 @@
 package main
 
 import (
+	"database/sql"
 	"github.com/joho/godotenv"
 	"github.com/maccath/go-webapp/pkg/greeting"
 	"github.com/maccath/go-webapp/pkg/http/web"
-	"github.com/maccath/go-webapp/pkg/storage/memory"
+	sqlStorage "github.com/maccath/go-webapp/pkg/storage/sql"
 	"log"
 	"net/http"
 	"os"
@@ -13,8 +14,16 @@ import (
 func main() {
 	loadEnv()
 
-	var repo = memory.Repository{}
-	repo.Save(memory.User{Name: "katy"})
+	connStr := os.Getenv("PGSQL")
+
+	// Connect to database
+	db, err := sql.Open("postgres", connStr)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	var repo = sqlStorage.NewRepository(db)
 
 	var g = greeting.NewService(repo)
 
